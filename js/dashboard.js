@@ -44,10 +44,15 @@ async function initDashboard() {
 /**
  * Handles user logout.
  */
+// Locate this function/logic in dashboard.js, map.js, and resources.js
+
 function handleLogout() {
-    localStorage.removeItem('barangay_map_logged_in');
-    // NOTE: Keep 'remember me' until next manual login if desired, but for simple apps, remove both.
-    // localStorage.removeItem('barangay_map_remember'); 
+    // 1. CLEAR THE ACTIVE SESSION KEY
+    localStorage.removeItem('barangay_map_logged_in'); 
+    
+    // 2. NEW FIX: CLEAR THE REMEMBER ME KEY
+    localStorage.removeItem('barangay_map_remember'); 
+
     window.location.href = 'index.html';
 }
 

@@ -1,13 +1,10 @@
-// weather.js - Handles interaction with the OpenWeatherMap API.
-
-// NOTE: Replace 'YOUR_API_KEY' with your actual OpenWeatherMap API Key
 const API_KEY = '99f854f21e84659e904d96879c2fb627'; 
 
 /**
  * Fetches current weather data for a given latitude and longitude.
  * @param {number} lat - Latitude.
  * @param {number} lng - Longitude.
- * @returns {Promise<Object|null>} A promise that resolves to a weather object or null on error.
+ * @returns {Promise    <Object|null>} A promise that resolves to a weather object or null on error.
  */
 export async function getWeather(lat, lng) {
     if (API_KEY === 'YOUR_API_KEY') {

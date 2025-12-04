@@ -342,3 +342,14 @@ body {
         grid-template-columns: 1fr;
     }
 }
+/* --- Footer Styles --- */
+.app-footer {
+    width: 100%;
+    padding: 15px 20px;
+    text-align: center;
+    margin-top: auto; /* Pushes the footer to the bottom of the flex container */
+    border-top: 1px solid var(--border-color);
+    background-color: var(--card-bg);
+    color: var(--secondary-color);
+    font-size: 0.85rem;
+}
