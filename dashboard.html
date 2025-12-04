@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barangay Map - Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    </head>
+<body>
+    <div class="container">
+        <aside class="sidebar" id="sidebar">
+            <h2>Barangay Map</h2>
+            <nav>
+                <ul>
+                    <li><a href="dashboard.html" class="active">Dashboard</a></li>
+                    <li><a href="map.html">Map Viewer</a></li>
+                    <li><a href="resources.html">Resources</a></li>
+                </ul>
+            </nav>
+            <div class="logout-link">
+                <a href="#" id="logout-btn">Logout</a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="header">
+                <h1>Dashboard Overview</h1>
+                <button class="menu-toggle" id="menu-toggle">☰</button>
+            </header>
+
+            <div class="card-grid">
+                <div class="card">
+                    <h3>Total Resources Count</h3>
+                    <p id="total-resources-count">...</p>
+                </div>
+                <div class="card">
+                    <h3>Number of Barangays</h3>
+                    <p id="barangay-count">...</p>
+                </div>
+                <div class="card" id="weather-card">
+                    <h3>Current Weather in PH Center</h3>
+                    <div id="weather-widget">
+                        <p>Loading weather...</p>
+                    </div>
+                </div>
+            </div>
+
+            </main>
+    </div>
+
+    <!-- <script src="js/data-loader.js"></script>
+    <script src="js/weather.js"></script>
+    <script src="js/dashboard.js"></script> -->
+    <script type="module" src="js/data-loader.js"></script>
+    <script type="module" src="js/weather.js"></script>
+    <script type="module" src="js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+[
+  {
+    "name": "Barangay San Juan",
+    "lat": 14.5995,
+    "lng": 120.9842,
+    "population": 2500,
+    "health_centers": 2,
+    "schools": 3,
+    "evacuation_sites": 1
+  },
+  {
+    "name": "Barangay Poblacion",
+    "lat": 14.605,
+    "lng": 120.975,
+    "population": 5200,
+    "health_centers": 3,
+    "schools": 5,
+    "evacuation_sites": 2
+  },
+  {
+    "name": "Barangay Maligaya",
+    "lat": 14.580,
+    "lng": 121.000,
+    "population": 1500,
+    "health_centers": 1,
+    "schools": 1,
+    "evacuation_sites": 1
+  },
+  {
+    "name": "Barangay Masikap",
+    "lat": 14.610,
+    "lng": 120.990,
+    "population": 3100,
+    "health_centers": 2,
+    "schools": 4,
+    "evacuation_sites": 1
+  },
+  {
+    "name": "Barangay Bagong Silang",
+    "lat": 14.575,
+    "lng": 120.965,
+    "population": 800,
+    "health_centers": 1,
+    "schools": 1,
+    "evacuation_sites": 0
+  }
+]
