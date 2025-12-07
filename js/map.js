@@ -3,11 +3,6 @@
 import { getBarangayData } from './data-loader.js';
 import { getWeather, renderWeatherWidget } from './weather.js';
 
-// Coordinates for a central location in the Philippines (Manila Bay area)
-const PH_START_LAT = 14.58; 
-const PH_START_LNG = 120.98;
-const DEFAULT_ZOOM = 12;
-
 let map;
 
 /**
@@ -15,11 +10,11 @@ let map;
  */
 function initMap() {
     // Initialize the map, centered on PH_START_LAT/LNG
-    map = L.map('map').setView([PH_START_LAT, PH_START_LNG], DEFAULT_ZOOM);
+    map = L.map('map').setView([8.367970, 124.866156], 16);
 
     // Define Base Layers
     const basicMap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
+        maxZoom: 21,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
 
