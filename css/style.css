@@ -466,3 +466,21 @@ body {
     padding: 5px 10px;
     cursor: pointer;
 }
+/* --- Leaflet Custom Marker Styles (MISSING BLOCK) --- */
+.custom-div-icon {
+    /* Define the size of the marker div container */
+    background: none; /* No background */
+    border: none;
+    text-align: center;
+    line-height: 1; 
+    /* The size must match iconSize in map.js for correct centering */
+    width: 30px !important;
+    height: 30px !important;
+}
+
+/* Style the actual Font Awesome icon inside the div */
+.custom-div-icon i {
+    font-size: 20px; /* Adjust size of the icon itself */
+    position: relative;
+    top: 5px; /* Adjust vertical position for better centering */
+}

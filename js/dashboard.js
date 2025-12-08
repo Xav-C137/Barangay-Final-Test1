@@ -29,6 +29,12 @@ function calculateStats(data) {
     document.getElementById('barangay-count').textContent = barangayCount.toLocaleString();
 }
 
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar) {
+        sidebar.classList.toggle('collapsed');
+    }
+}
 //loads data and weather 
 async function initDashboard() {
     // barangay stats

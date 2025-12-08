@@ -4,8 +4,14 @@ import { getBarangayData } from './data-loader.js';
 import { getWeather, renderWeatherWidget } from './weather.js';
 import './login.js';
 
-// ... (Existing constants and initMap function remain the same) ...
 let map;
+
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar) {
+        sidebar.classList.toggle('collapsed');
+    }
+}
 
 function initMap() {
     // ... (Map initialization code from previous response) ...
@@ -79,9 +85,8 @@ async function loadAllMarkers(barangayData) {
         // Load popup content asynchronously to avoid blocking the loop
         bMarker.on('popupopen', async () => {
              const content = await createBarangayPopup(barangay);
-             bMarker.setPopupContent(content).openPopup();
+             bMarker.setPopupContent(content);
         });
-
 
         // --- 2. Health Center Markers ---
         barangay.healthCenters.forEach(hc => {

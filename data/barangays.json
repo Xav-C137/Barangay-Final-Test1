@@ -4,8 +4,8 @@
     "barangayName": "Barangay San Juan",
     "population": 2500,
     "barangayLocation": {
-      "lat": 14.5995,
-      "lng": 120.9842
+      "lat": 8.369462,
+      "lng": 124.864141
     },
     "healthCenters": [
       { "id": "hc1", "name": "San Juan Main Health Unit", "lat": 14.5998, "lng": 120.9840 },
