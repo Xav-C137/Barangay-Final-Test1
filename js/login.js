@@ -64,6 +64,19 @@ function handleLogin(event) {
     }
 }
 
+function handleLogout(e) {
+    if (e) e.preventDefault();
+    localStorage.removeItem(SESSION_KEY);
+    localStorage.removeItem(REMEMBER_ME_KEY); // Also remove remember me key
+    window.location.href = 'index.html';
+}
+
+export function setupLogoutListener() { // EXPORT THIS FUNCTION
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', handleLogout);
+    }
+}
 // Add event listener for the form on the login page
 document.addEventListener('DOMContentLoaded', () => {
     // Run session check on all pages

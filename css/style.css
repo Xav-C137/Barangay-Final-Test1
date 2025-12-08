@@ -353,3 +353,116 @@ body {
     color: var(--secondary-color);
     font-size: 0.85rem;
 }
+/* Add to style.css */
+
+/* --- CRUD Modal Styles --- */
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.modal-content {
+    background-color: var(--card-bg);
+    padding: 30px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 700px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    color: var(--secondary-color);
+}
+
+/* Form Styling */
+.crud-container fieldset {
+    border: 1px solid var(--border-color);
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+.crud-container legend {
+    font-weight: bold;
+    padding: 0 10px;
+    color: var(--primary-color);
+}
+
+.form-group.location-group input {
+    width: calc(50% - 5px);
+    display: inline-block;
+}
+
+/* Dynamic Facility Group */
+.facility-group {
+    border: 1px dashed #ccc;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    position: relative;
+}
+
+.facility-group .remove-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    padding: 5px;
+    font-size: 10px;
+}
+
+.btn-secondary {
+    padding: 8px 15px;
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.2s;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+/* Barangay List Table (for the CRUD Read/Delete view) */
+.barangay-list-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.barangay-list-table th, .barangay-list-table td {
+    padding: 12px;
+    border-bottom: 1px solid var(--border-color);
+    text-align: left;
+}
+.barangay-list-table th {
+    background-color: var(--primary-color);
+    color: white;
+}
+.barangay-list-table .action-btns button {
+    margin-right: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}

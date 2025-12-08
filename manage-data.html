@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barangay Map - Manage Data</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar" id="sidebar">
+            <h2>Barangay Map</h2>
+            <nav>
+                <ul>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="map.html">Map Viewer</a></li>
+                    <li><a href="resources.html">Resources</a></li>
+                    <li><a href="manage-data.html" class="active">Manage Data (CRUD)</a></li>
+                </ul>
+            </nav>
+            <div class="logout-link">
+                <a href="#" id="logout-btn">Logout</a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="header">
+                <h1>Manage Barangay Data (CRUD)</h1>
+                <button class="menu-toggle" id="menu-toggle">☰</button>
+            </header>
+
+            <div class="crud-container">
+                <h2>Barangay Records</h2>
+                <button id="add-new-btn" class="btn-primary" style="margin-bottom: 20px;">+ Add New Barangay</button>
+
+                <div id="barangay-list" class="resource-table-container">
+                    </div>
+
+                <div id="crud-modal" class="modal-backdrop" style="display: none;">
+                    <div class="modal-content">
+                        <span class="close-btn">&times;</span>
+                        <h3 id="modal-title">Add New Barangay</h3>
+                        <form id="barangay-crud-form">
+                            <input type="hidden" id="barangay-id">
+
+                            <fieldset>
+                                <legend>Barangay Details</legend>
+                                <div class="form-group">
+                                    <label for="barangayName">Name:</label>
+                                    <input type="text" id="barangayName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="population">Population:</label>
+                                    <input type="number" id="population" min="1" required>
+                                </div>
+                                <div class="form-group location-group">
+                                    <label>Location (Lat/Lng):</label>
+                                    <input type="number" step="any" id="barangayLat" placeholder="Latitude" required>
+                                    <input type="number" step="any" id="barangayLng" placeholder="Longitude" required>
+                                </div>
+                            </fieldset>
+
+                            <fieldset>
+                                <legend>Health Centers</legend>
+                                <div id="health-centers-container">
+                                    </div>
+                                <button type="button" class="btn-secondary" id="add-health-center-btn">+ Add Health Center</button>
+                            </fieldset>
+
+                            <fieldset>
+                                <legend>Schools</legend>
+                                <div id="schools-container">
+                                    </div>
+                                <button type="button" class="btn-secondary" id="add-school-btn">+ Add School</button>
+                            </fieldset>
+
+                            <button type="submit" class="btn-primary submit-btn">Save Barangay</button>
+                            <button type="button" class="btn-secondary close-btn" style="float: right;">Cancel</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script type="module" src="js/login.js"></script> 
+    <script type="module" src="js/data-loader.js"></script>
+    <script type="module" src="js/crud.js"></script>
+</body>
+</html>

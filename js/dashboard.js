@@ -1,3 +1,4 @@
+
 // dashboard.js - Loads stats, weather, and handles UI on the dashboard.
 
 import { getBarangayData } from './data-loader.js';
@@ -16,6 +17,8 @@ function calculateStats(data) {
     let totalResources = 0;
 
     data.forEach(barangay => {
+        const healthCenters = barangay.healthCenters ? barangay.healthCenters.length : 0;
+        const schools = barangay.schools ? barangay.schools.length : 0;
         // Sum schools, health centers, and evacuation sites for total resources
         totalResources += barangay.health_centers + barangay.schools + barangay.evacuation_sites;
     });

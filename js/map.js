@@ -1,74 +1,62 @@
-// map.js - Initializes the Leaflet map and loads barangay markers.
+// map.js - Initializes the Leaflet map and loads all nested markers.
 
 import { getBarangayData } from './data-loader.js';
 import { getWeather, renderWeatherWidget } from './weather.js';
+import { setupLogoutListener } from './login.js';
+
+// ... (Existing constants and initMap function remain the same) ...
+const PH_START_LAT = 8.369435; 
+const PH_START_LNG = 124.864576;
+const DEFAULT_ZOOM = 12;
 
 let map;
 
-/**
- * Initializes the Leaflet map and base layers.
- */
 function initMap() {
-    // Initialize the map, centered on PH_START_LAT/LNG
-    map = L.map('map').setView([8.367970, 124.866156], 16);
+    // ... (Map initialization code from previous response) ...
+    map = L.map('map').setView([PH_START_LAT, PH_START_LNG], DEFAULT_ZOOM);
 
-    // Define Base Layers
-    const basicMap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 21,
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    }).addTo(map);
+    const basicMap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>' }).addTo(map);
+    const satelliteMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19, attribution: 'Tiles &copy; Esri' });
 
-    // Using Esri for a simple satellite option (common free tile provider)
-    const satelliteMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-        maxZoom: 19,
-        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-    });
-
-    // Add Layer Control
-    const baseMaps = {
-        "Basic Map": basicMap,
-        "Satellite Map": satelliteMap
-    };
-
+    const baseMaps = { "Basic Map": basicMap, "Satellite Map": satelliteMap };
     L.control.layers(baseMaps).addTo(map);
-    
-    // Add Fullscreen Control (Optional but good UX)
     L.control.fullscreen().addTo(map);
-
-    // Add Geocoder Search Control (NOTE: Requires the leaflet-control-geocoder library)
-    L.Control.geocoder({
-        placeholder: "Search location...",
-        defaultMarkGeocode: false // Don't add default marker
-    }).on('markgeocode', function(e) {
-        const bbox = e.geocode.bbox;
-        const poly = L.polygon([
-            bbox.getSouthEast(),
-            bbox.getNorthEast(),
-            bbox.getNorthWest(),
-            bbox.getSouthWest()
-        ]).addTo(map);
-        map.fitBounds(poly.getBounds());
-    }).addTo(map);
+    
+    // Simple Geocoder (Note: Only handles searches, not dynamic marker lookup)
+    L.Control.geocoder({ placeholder: "Search location...", defaultMarkGeocode: false }).addTo(map);
 }
 
+// Custom icons for different facilities
+const healthIcon = L.divIcon({
+    className: 'custom-div-icon health-icon',
+    html: '<i style="color:red" class="fas fa-hospital-symbol"></i>',
+    iconSize: [30, 30],
+    iconAnchor: [15, 30]
+});
+
+const schoolIcon = L.divIcon({
+    className: 'custom-div-icon school-icon',
+    html: '<i style="color:blue" class="fas fa-school"></i>',
+    iconSize: [30, 30],
+    iconAnchor: [15, 30]
+});
+
+
 /**
- * Creates the HTML content for a barangay marker popup.
- * @param {Object} barangay - The barangay object.
- * @param {Object|null} weather - The weather object for the location.
- * @returns {string} The complete HTML string for the popup.
+ * Creates the HTML content for a Barangay marker popup.
  */
-function createPopupContent(barangay, weather) {
+async function createBarangayPopup(barangay) {
+    const { lat, lng } = barangay.barangayLocation;
+    const weather = await getWeather(lat, lng);
+    
+    // Ensure weather.js has an API key for this to work
     const weatherHtml = weather 
         ? renderWeatherWidget(weather) 
-        : '<p>Weather data unavailable.</p>';
+        : '<p>Weather data unavailable or API key not set.</p>';
 
     return `
-        <h3>${barangay.name}</h3>
-        <hr>
+        <h3>${barangay.barangayName}</h3>
         <p><strong>Population:</strong> ${barangay.population.toLocaleString()}</p>
-        <p><strong>Health Centers:</strong> ${barangay.health_centers}</p>
-        <p><strong>Schools:</strong> ${barangay.schools}</p>
-        <p><strong>Evacuation Sites:</strong> ${barangay.evacuation_sites}</p>
         <hr>
         <h4>Current Weather</h4>
         ${weatherHtml}
@@ -76,28 +64,52 @@ function createPopupContent(barangay, weather) {
 }
 
 /**
- * Loads barangay markers onto the map.
- * @param {Array} barangayData - Array of barangay objects.
+ * Loads all markers onto the map (Barangay, Health Centers, Schools).
  */
-async function loadBarangayMarkers(barangayData) {
-    // Create a feature group to manage all markers
+async function loadAllMarkers(barangayData) {
+    // Clear previous layers if the map is being refreshed
+    if (map.markerGroup) {
+        map.removeLayer(map.markerGroup);
+    }
     const markerGroup = L.featureGroup().addTo(map);
+    map.markerGroup = markerGroup; // Store group for easy removal/refresh
 
     for (const barangay of barangayData) {
-        // Fetch weather for the specific barangay coordinates
-        const weather = await getWeather(barangay.lat, barangay.lng);
+        // --- 1. Barangay Marker ---
+        const bMarker = L.marker([barangay.barangayLocation.lat, barangay.barangayLocation.lng])
+            .bindPopup("Loading details...") // Temporary popup
+            .addTo(markerGroup);
 
-        const marker = L.marker([barangay.lat, barangay.lng])
-            .bindPopup(createPopupContent(barangay, weather), {
-                maxWidth: 300
-            })
-            // Store barangay data on the marker for search purposes
-            .data = barangay; 
-        
-        markerGroup.addLayer(marker);
+        // Load popup content asynchronously to avoid blocking the loop
+        bMarker.on('popupopen', async () => {
+             const content = await createBarangayPopup(barangay);
+             bMarker.setPopupContent(content).openPopup();
+        });
+
+
+        // --- 2. Health Center Markers ---
+        barangay.healthCenters.forEach(hc => {
+            const hcPopup = `
+                <h4>${hc.name}</h4>
+                <span style="background-color: red; color: white; padding: 2px 5px; border-radius: 3px;">Health Facility</span>
+            `;
+            L.marker([hc.lat, hc.lng], { icon: healthIcon })
+                .bindPopup(hcPopup)
+                .addTo(markerGroup);
+        });
+
+        // --- 3. School Markers ---
+        barangay.schools.forEach(school => {
+            const schoolPopup = `
+                <h4>${school.name}</h4>
+                <span style="background-color: blue; color: white; padding: 2px 5px; border-radius: 3px;">School Facility</span>
+            `;
+            L.marker([school.lat, school.lng], { icon: schoolIcon })
+                .bindPopup(schoolPopup)
+                .addTo(markerGroup);
+        });
     }
     
-    // Optional: Fit map view to all markers after loading
     if (barangayData.length > 0) {
          map.fitBounds(markerGroup.getBounds());
     }
@@ -109,50 +121,25 @@ async function loadBarangayMarkers(barangayData) {
 async function initMapPage() {
     initMap();
     const barangayData = await getBarangayData();
-    await loadBarangayMarkers(barangayData);
+    await loadAllMarkers(barangayData);
 }
 
-/**
- * Toggles the sidebar for mobile responsiveness.
- */
-function toggleSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    if (sidebar) {
-        sidebar.classList.toggle('collapsed');
-    }
-}
+// ... (Existing logout and toggleSidebar functions remain the same) ...
 
-// --- Event Listeners and Initial Load ---
 document.addEventListener('DOMContentLoaded', () => {
+    // Ensure Leaflet icons are included for the custom icons to work (Font Awesome)
+    // You'd need to link Font Awesome in map.html head: 
+    // <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    
     initMapPage();
+    setupLogoutListener();
 
-    // Attach logout functionality
-    const logoutBtn = document.getElementById('logout-btn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', (e) => {
-            e.preventDefault(); 
-            localStorage.removeItem('barangay_map_logged_in');
-            window.location.href = 'index.html';
-        });
-    }
-
-    // Attach menu toggle functionality
     const menuToggle = document.getElementById('menu-toggle');
     if (menuToggle) {
         menuToggle.addEventListener('click', toggleSidebar);
     }
+
+    // ... (Existing logout and menu toggle listeners) ...
 });
-// Locate this function/logic in dashboard.js, map.js, and resources.js
-
-function handleLogout() {
-    // 1. CLEAR THE ACTIVE SESSION KEY
-    localStorage.removeItem('barangay_map_logged_in'); 
-    
-    // 2. NEW FIX: CLEAR THE REMEMBER ME KEY
-    localStorage.removeItem('barangay_map_remember'); 
-
-    window.location.href = 'index.html';
-}
-
 // Re-import login.js functions (specifically validateSession) to ensure session check runs on this page
 import './login.js';

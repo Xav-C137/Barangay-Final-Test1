@@ -17,13 +17,17 @@ function renderTable(data) {
     tbody.innerHTML = ''; // Clear existing rows
 
     data.forEach(barangay => {
+        // --- FIX: Access new nested properties ---
+        const healthCenterCount = barangay.healthCenters ? barangay.healthCenters.length : 0;
+        const schoolCount = barangay.schools ? barangay.schools.length : 0;
+        // ----------------------------------------
+
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>${barangay.name}</td>
+            <td>${barangay.barangayName}</td> 
             <td>${barangay.population.toLocaleString()}</td>
-            <td>${barangay.health_centers}</td>
-            <td>${barangay.schools}</td>
-            <td>${barangay.evacuation_sites}</td>
+            <td>${healthCenterCount}</td>
+            <td>${schoolCount}</td>
         `;
         tbody.appendChild(row);
     });
@@ -37,7 +41,7 @@ function filterTable() {
     
     // Filter by barangay name
     const filteredData = allBarangays.filter(barangay => 
-        barangay.name.toLowerCase().includes(searchTerm)
+        barangay.barangayName.toLowerCase().includes(searchTerm)
     );
 
     // Re-sort the filtered data
@@ -54,7 +58,8 @@ function filterTable() {
  */
 function sortData(data, column, ascending) {
     return data.sort((a, b) => {
-        let valA = a[column];
+        
+        let valA = (column === 'name' ? a.barangayName : a[column]);
         let valB = b[column];
 
         // Handle numeric values
@@ -157,4 +162,4 @@ function handleLogout() {
 }
 
 // Re-import login.js functions (specifically validateSession) to ensure session check runs on this page
-import './login.js';
+import './login.js';    
