@@ -1,10 +1,9 @@
 
-// dashboard.js - Loads stats, weather, and handles UI on the dashboard.
-
+import { setupLogoutListener } from './login.js';
 import { getBarangayData } from './data-loader.js';
 import { getWeather, renderWeatherWidget } from './weather.js';
+import './login.js';
 
-// Coordinates for a central location in the Philippines (Manila) for general weather
 const PH_CENTER_LAT = 14.5995; 
 const PH_CENTER_LNG = 120.9842; 
 
@@ -14,28 +13,28 @@ const PH_CENTER_LNG = 120.9842;
  */
 function calculateStats(data) {
     const barangayCount = data.length;
+    let totalPopulation = 0;
     let totalResources = 0;
 
     data.forEach(barangay => {
         const healthCenters = barangay.healthCenters ? barangay.healthCenters.length : 0;
         const schools = barangay.schools ? barangay.schools.length : 0;
-        // Sum schools, health centers, and evacuation sites for total resources
-        totalResources += barangay.health_centers + barangay.schools + barangay.evacuation_sites;
+        const evacuationSites = 0;
+      
+        totalResources += healthCenters + schools + evacuationSites;
+        totalPopulation += barangay.population;
     });
 
     document.getElementById('total-resources-count').textContent = totalResources.toLocaleString();
     document.getElementById('barangay-count').textContent = barangayCount.toLocaleString();
 }
 
-/**
- * Initializes the dashboard by loading data and weather.
- */
+//loads data and weather 
 async function initDashboard() {
-    // 1. Load Barangay Stats
+    // barangay stats
     const barangayData = await getBarangayData();
     calculateStats(barangayData);
-
-    // 2. Load Weather
+    // weather
     const weatherData = await getWeather(PH_CENTER_LAT, PH_CENTER_LNG);
     const weatherWidget = document.getElementById('weather-widget');
     
@@ -44,51 +43,14 @@ async function initDashboard() {
     }
 }
 
-/**
- * Handles user logout.
- */
-// Locate this function/logic in dashboard.js, map.js, and resources.js
-
-function handleLogout() {
-    // 1. CLEAR THE ACTIVE SESSION KEY
-    localStorage.removeItem('barangay_map_logged_in'); 
-    
-    // 2. NEW FIX: CLEAR THE REMEMBER ME KEY
-    localStorage.removeItem('barangay_map_remember'); 
-
-    window.location.href = 'index.html';
-}
-
-/**
- * Toggles the sidebar for mobile responsiveness.
- */
-function toggleSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    if (sidebar) {
-        sidebar.classList.toggle('collapsed');
-    }
-}
-
-
-// --- Event Listeners and Initial Load ---
+//event Listeners and Initial Load
 document.addEventListener('DOMContentLoaded', () => {
     initDashboard();
+    setupLogoutListener();
 
-    // Attach logout functionality to the button
-    const logoutBtn = document.getElementById('logout-btn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', (e) => {
-            e.preventDefault(); // Prevent default link action
-            handleLogout();
-        });
-    }
-
-    // Attach menu toggle functionality
+    //menu toggle
     const menuToggle = document.getElementById('menu-toggle');
     if (menuToggle) {
         menuToggle.addEventListener('click', toggleSidebar);
     }
 });
-
-// Re-import login.js functions (specifically validateSession) to ensure session check runs on this page
-import './login.js';

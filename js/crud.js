@@ -227,9 +227,4 @@ function initCrud() {
     });
     setupLogoutListener();
 }
-
 document.addEventListener('DOMContentLoaded', initCrud);
-
-
-// Ensure the sidebar navigation is updated in dashboard.html, map.html, resources.html
-// to include the link: <li><a href="manage-data.html">Manage Data (CRUD)</a></li>

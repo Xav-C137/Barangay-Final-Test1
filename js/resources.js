@@ -1,5 +1,4 @@
-// resources.js - Handles displaying, searching, and sorting the resources table.
-
+import { setupLogoutListener } from './login.js';
 import { getBarangayData } from './data-loader.js';
 
 let allBarangays = []; // Store the full data set
@@ -14,13 +13,12 @@ function renderTable(data) {
     const tbody = document.getElementById('resources-table-body');
     if (!tbody) return;
 
-    tbody.innerHTML = ''; // Clear existing rows
+    tbody.innerHTML = '';
 
     data.forEach(barangay => {
-        // --- FIX: Access new nested properties ---
         const healthCenterCount = barangay.healthCenters ? barangay.healthCenters.length : 0;
         const schoolCount = barangay.schools ? barangay.schools.length : 0;
-        // ----------------------------------------
+        const evacuationCount = 0;
 
         const row = document.createElement('tr');
         row.innerHTML = `
@@ -28,6 +26,7 @@ function renderTable(data) {
             <td>${barangay.population.toLocaleString()}</td>
             <td>${healthCenterCount}</td>
             <td>${schoolCount}</td>
+            <td>${evacuationCount}</td>
         `;
         tbody.appendChild(row);
     });
@@ -38,13 +37,10 @@ function renderTable(data) {
  */
 function filterTable() {
     const searchTerm = document.getElementById('resource-search').value.toLowerCase();
-    
-    // Filter by barangay name
+
     const filteredData = allBarangays.filter(barangay => 
         barangay.barangayName.toLowerCase().includes(searchTerm)
     );
-
-    // Re-sort the filtered data
     const sortedData = sortData(filteredData, currentSortColumn, isAscending);
     renderTable(sortedData);
 }
@@ -57,16 +53,36 @@ function filterTable() {
  * @returns {Array} The sorted array.
  */
 function sortData(data, column, ascending) {
+    const isResourceColumn = ['healthCenters', 'schools', 'evacuation_sites'].includes(column);
+
     return data.sort((a, b) => {
         
-        let valA = (column === 'name' ? a.barangayName : a[column]);
-        let valB = b[column];
+        let valA, valB;
 
-        // Handle numeric values
+        if (isResourceColumn) {
+
+            valA = a[column] ? a[column].length : 0;
+            valB = b[column] ? b[column].length : 0;
+            if (column === 'evacuation_sites') {
+                valA = 0; 
+                valB = 0;
+            }
+        } 
+
+        else if (column === 'name') { 
+             valA = a.barangayName;
+             valB = b.barangayName;
+        } 
+
+        else {
+            valA = a[column];
+            valB = b[column];
+        }
+
         if (typeof valA === 'number') {
             return ascending ? valA - valB : valB - valA;
         } 
-        // Handle string values (case-insensitive)
+
         else {
             valA = String(valA).toLowerCase();
             valB = String(valB).toLowerCase();
@@ -89,10 +105,9 @@ function handleSort(event) {
         isAscending = !isAscending;
     } else {
         currentSortColumn = newColumn;
-        isAscending = true; // Default to ascending for a new column
+        isAscending = true;
     }
-
-    // Apply filter first to ensure the data set is correct, then sort and render
+    
     filterTable();
 }
 
@@ -131,16 +146,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.resources-table th').forEach(header => {
         header.addEventListener('click', handleSort);
     });
-
-    // Attach logout functionality
-    const logoutBtn = document.getElementById('logout-btn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', (e) => {
-            e.preventDefault(); 
-            localStorage.removeItem('barangay_map_logged_in');
-            window.location.href = 'index.html';
-        });
-    }
+    
+    setupLogoutListener();
 
     // Attach menu toggle functionality
     const menuToggle = document.getElementById('menu-toggle');
@@ -148,18 +155,3 @@ document.addEventListener('DOMContentLoaded', () => {
         menuToggle.addEventListener('click', toggleSidebar);
     }
 });
-
-// Locate this function/logic in dashboard.js, map.js, and resources.js
-
-function handleLogout() {
-    // 1. CLEAR THE ACTIVE SESSION KEY
-    localStorage.removeItem('barangay_map_logged_in'); 
-    
-    // 2. NEW FIX: CLEAR THE REMEMBER ME KEY
-    localStorage.removeItem('barangay_map_remember'); 
-
-    window.location.href = 'index.html';
-}
-
-// Re-import login.js functions (specifically validateSession) to ensure session check runs on this page
-import './login.js';    

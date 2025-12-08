@@ -1,5 +1,3 @@
-// login.js - Handles user authentication via LocalStorage.
-
 const USER_KEY = 'admin@email.com';
 const PASS_KEY = 'admin123';
 const SESSION_KEY = 'barangay_map_logged_in';
@@ -79,7 +77,6 @@ export function setupLogoutListener() { // EXPORT THIS FUNCTION
 }
 // Add event listener for the form on the login page
 document.addEventListener('DOMContentLoaded', () => {
-    // Run session check on all pages
     validateSession(); 
     
     const loginForm = document.getElementById('login-form');

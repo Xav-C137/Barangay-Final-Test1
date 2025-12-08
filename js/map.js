@@ -1,19 +1,15 @@
 // map.js - Initializes the Leaflet map and loads all nested markers.
-
+import { setupLogoutListener } from './login.js';
 import { getBarangayData } from './data-loader.js';
 import { getWeather, renderWeatherWidget } from './weather.js';
-import { setupLogoutListener } from './login.js';
+import './login.js';
 
 // ... (Existing constants and initMap function remain the same) ...
-const PH_START_LAT = 8.369435; 
-const PH_START_LNG = 124.864576;
-const DEFAULT_ZOOM = 12;
-
 let map;
 
 function initMap() {
     // ... (Map initialization code from previous response) ...
-    map = L.map('map').setView([PH_START_LAT, PH_START_LNG], DEFAULT_ZOOM);
+    map = L.map('map').setView([8.369435, 124.864576], 12);
 
     const basicMap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>' }).addTo(map);
     const satelliteMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19, attribution: 'Tiles &copy; Esri' });
@@ -124,13 +120,7 @@ async function initMapPage() {
     await loadAllMarkers(barangayData);
 }
 
-// ... (Existing logout and toggleSidebar functions remain the same) ...
-
 document.addEventListener('DOMContentLoaded', () => {
-    // Ensure Leaflet icons are included for the custom icons to work (Font Awesome)
-    // You'd need to link Font Awesome in map.html head: 
-    // <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
-    
     initMapPage();
     setupLogoutListener();
 
@@ -138,8 +128,4 @@ document.addEventListener('DOMContentLoaded', () => {
     if (menuToggle) {
         menuToggle.addEventListener('click', toggleSidebar);
     }
-
-    // ... (Existing logout and menu toggle listeners) ...
 });
-// Re-import login.js functions (specifically validateSession) to ensure session check runs on this page
-import './login.js';
