@@ -1,34 +1,18 @@
 [
   {
     "id": "b1",
-    "barangayName": "Barangay San Juan",
+    "barangayName": "Manolo Fortich",
     "population": 2500,
     "barangayLocation": {
-      "lat": 8.369462,
-      "lng": 124.864141
+      "lat": 8.369244,
+      "lng": 124.864587
+
     },
     "healthCenters": [
-      { "id": "hc1", "name": "San Juan Main Health Unit", "lat": 14.5998, "lng": 120.9840 },
-      { "id": "hc2", "name": "San Juan Satellite Clinic", "lat": 14.6010, "lng": 120.9850 }
+      { "id": "hc1", "name": "San Juan Main Health Unit", "lat": 8.38505, "lng": 124.83902 }
     ],
     "schools": [
-      { "id": "s1", "name": "San Juan Elementary School", "lat": 14.5990, "lng": 120.9835 },
-      { "id": "s2", "name": "Acme High School", "lat": 14.6005, "lng": 120.9845 }
-    ]
-  },
-  {
-    "id": "b2",
-    "barangayName": "Barangay Poblacion",
-    "population": 5200,
-    "barangayLocation": {
-      "lat": 14.605,
-      "lng": 120.975
-    },
-    "healthCenters": [
-      { "id": "hc3", "name": "Poblacion Health Office", "lat": 14.6055, "lng": 120.9755 }
-    ],
-    "schools": [
-      { "id": "s3", "name": "Poblacion Central School", "lat": 14.6045, "lng": 120.9740 }
+      { "id": "s1", "name": "San Juan Elementary School", "lat": 8.369106, "lng": 124.862698 }
     ]
   }
 ]
