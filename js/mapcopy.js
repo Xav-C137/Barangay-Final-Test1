@@ -3,9 +3,6 @@ import { setupLogoutListener } from './login.js';
 import { getBarangayData } from './data-loader.js';
 import { getWeather, renderWeatherWidget } from './weather.js';
 import './login.js';
-
-// FIX: Explicitly set the path for Leaflet's default marker images
-// This is required when serving locally or when the CSS path is broken.
 delete L.Icon.Default.prototype._getIconUrl;
 
 L.Icon.Default.mergeOptions({
@@ -32,13 +29,27 @@ function initMap() {
 
     const baseMaps = { "Basic Map": basicMap, "Satellite Map": satelliteMap };
     L.control.layers(baseMaps).addTo(map);
-    // L.control.fullscreen().addTo(map); // REMOVED: Failed to load due to MIME type error
+    L.control.fullscreen().addTo(map);
     
     // Simple Geocoder (Note: Only handles searches, not dynamic marker lookup)
     L.Control.geocoder({ placeholder: "Search location...", defaultMarkGeocode: false }).addTo(map);
 }
 
-// Custom icons removed to use normal Leaflet markers
+// Custom icons for different facilities
+const healthIcon = L.divIcon({
+    className: 'custom-div-icon health-icon',
+    html: '<i style="color:red" class="fas fa-hospital-symbol"></i>',
+    iconSize: [30, 30],
+    iconAnchor: [15, 30]
+});
+
+const schoolIcon = L.divIcon({
+    className: 'custom-div-icon school-icon',
+    html: '<i style="color:blue" class="fas fa-school"></i>',
+    iconSize: [30, 30],
+    iconAnchor: [15, 30]
+});
+
 
 /**
  * Creates the HTML content for a Barangay marker popup.
@@ -73,7 +84,7 @@ async function loadAllMarkers(barangayData) {
     map.markerGroup = markerGroup; // Store group for easy removal/refresh
 
     for (const barangay of barangayData) {
-        // --- 1. Barangay Marker (Default Pin) ---
+        // --- 1. Barangay Marker ---
         const bMarker = L.marker([barangay.barangayLocation.lat, barangay.barangayLocation.lng])
             .bindPopup("Loading details...") // Temporary popup
             .addTo(markerGroup);
@@ -84,26 +95,24 @@ async function loadAllMarkers(barangayData) {
              bMarker.setPopupContent(content);
         });
 
-        // --- 2. Health Center Markers (Default Pin) ---
+        // --- 2. Health Center Markers ---
         barangay.healthCenters.forEach(hc => {
             const hcPopup = `
                 <h4>${hc.name}</h4>
                 <span style="background-color: red; color: white; padding: 2px 5px; border-radius: 3px;">Health Facility</span>
             `;
-            // Removed { icon: healthIcon }
-            L.marker([hc.lat, hc.lng]) 
+            L.marker([hc.lat, hc.lng], { icon: healthIcon })
                 .bindPopup(hcPopup)
                 .addTo(markerGroup);
         });
 
-        // --- 3. School Markers (Default Pin) ---
+        // --- 3. School Markers ---
         barangay.schools.forEach(school => {
             const schoolPopup = `
                 <h4>${school.name}</h4>
                 <span style="background-color: blue; color: white; padding: 2px 5px; border-radius: 3px;">School Facility</span>
             `;
-            // Removed { icon: schoolIcon }
-            L.marker([school.lat, school.lng])
+            L.marker([school.lat, school.lng], { icon: schoolIcon })
                 .bindPopup(schoolPopup)
                 .addTo(markerGroup);
         });
@@ -119,6 +128,9 @@ async function loadAllMarkers(barangayData) {
  */
 async function initMapPage() {
     initMap();
+    L.marker([8.369435, 124.864576])
+        .bindPopup("Map Center Test Pin: Leaflet is Working!")
+        .addTo(map);
     const barangayData = await getBarangayData();
     await loadAllMarkers(barangayData);
 }
