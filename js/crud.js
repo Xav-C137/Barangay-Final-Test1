@@ -1,4 +1,4 @@
-// crud.js - Handles the CRUD functionality for barangay data stored in LocalStorage.
+// crud.js - Handles the CRUD functionality for barangay data stored in LocalStorage..
 
 import { getBarangayData, saveBarangayData } from './data-loader.js';
 import { setupLogoutListener } from './login.js';
@@ -15,7 +15,7 @@ let allBarangays = []; // Local cache of data
 const generateId = () => Math.random().toString(36).substring(2, 9);
 
 /**
- * Generates the HTML for a dynamic facility input group (Health Center or School).
+ * Generates the HTML for a dynamic facility input group (Health Center or School)..
  * @param {string} type - 'healthCenters' or 'schools'.
  * @param {Object} [facility={}] - Existing facility data for editing.
  * @returns {string} The HTML string.
