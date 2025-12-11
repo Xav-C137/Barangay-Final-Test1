@@ -9,10 +9,10 @@
 
     },
     "healthCenters": [
-      { "id": "hc1", "name": "San Juan Main Health Unit", "lat": 8.38505, "lng": 124.83902 }
+      { "id": "hc1", "name": "Manolo Fortich HHealth Center", "lat": 8.38505, "lng": 124.83902 }
     ],
     "schools": [
-      { "id": "s1", "name": "San Juan Elementary School", "lat": 8.369106, "lng": 124.862698 }
+      { "id": "s1", "name": "Manolo Fortich Centreal, Elementary School", "lat": 8.369106, "lng": 124.862698 }
     ]
   }
 ]
